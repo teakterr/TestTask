@@ -53,7 +53,11 @@ class SbisPage(BasePage):
         current_region=self.element_is_visible(locators.REGION_CHOOSE, locators.TIMEOUT)
         return current_region.text
     def is_contacts_present(self):
-        return self.element_is_visible(locators.CONTACTS_PARTNERS, locators.TIMEOUT)
+        try:
+            self.element_is_visible(locators.CONTACTS_PARTNERS, locators.TIMEOUT)
+        except:
+            return False
+        return True
     def go_to_choose_region(self):
         region_change=self.element_clickable(locators.REGION_CHOOSE, locators.TIMEOUT)
         region_change.click()
@@ -71,21 +75,21 @@ class SbisPage(BasePage):
     def getsize_plugin_page(self):
         element=self.element_clickable(locators.DOWNLOAD_PLUGIN_WEB_BUTTON, locators.TIMEOUT)
         size=element.text
-        size=size[size.find('Exe')+3:size.find('МБ')]
+        size=size[size.find('Exe')+4:size.find('МБ')-1]
         return size
     def check_plugin_size(self):
         path_plugin=os.path.dirname(os.path.abspath(__file__))
         path_plugin=path_plugin+'/sbisplugin-setup-web.exe'
         try:
-            assert os.path.exists(path_plugin), 'Не скачался за разумное время'
+            assert self.check_file(path_plugin, 20)==True, 'Не скачался за разумное время'
         except:
             return False
         current_size=round(os.path.getsize(path_plugin)/(1024*1024), 2)
         size_from_site=self.getsize_plugin_page() 
         try:
-            assert size_from_site==current_size, 'Некорректный размер'
+            assert size_from_site==str(current_size), 'Некорректный размер'
         except:
-            return False
+            return current_size, size_from_site
         return True
     def check_region_kamchatka_in_title(self):
         try:
@@ -99,3 +103,13 @@ class SbisPage(BasePage):
         except:
             return False
         return True
+    def check_file(self, path, timeout):
+        i=0
+        while(i!=timeout):
+            if os.path.exists(path)==True:
+                return True
+            time.sleep(1)
+            i+=1
+        return False
+    def check_url(self):
+        return self.driver.current_url
