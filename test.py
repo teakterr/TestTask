@@ -26,5 +26,4 @@ def test_plugin(browser_with_option):
     sbis_page.open()
     sbis_page.go_to_footage_download()
     sbis_page.download_web_plugin()
-    time.sleep(10)
     assert sbis_page.check_plugin_size()==True, 'Не найден нужный файл с нужным размером'

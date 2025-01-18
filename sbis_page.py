@@ -19,12 +19,13 @@ class locators:
     DOWNLOAD_PLUGIN_WEB_BUTTON=(By.CSS_SELECTOR, "a[href='https://update.saby.ru/Sbis3Plugin/master/win32/sbisplugin-setup-web.exe']")
 class SbisPage(BasePage):
     def go_to_contacts(self):
+        self.element_is_located(locators.CONTACTS, locators.TIMEOUT)
         contact_button=self.element_clickable(locators.CONTACTS, locators.TIMEOUT)
         contact_button.click()
         contact_button=self.element_clickable(locators.MORE_CONTACTS, locators.TIMEOUT)
         contact_button.click()
     def go_to_tensor(self):
-        time.sleep(3)
+        self.element_is_located(locators.BANNER_TENSOR, locators.TIMEOUT)
         tensor_button=self.element_clickable(locators.BANNER_TENSOR, locators.TIMEOUT)
         tensor_button.click()
         new_window=self.driver.window_handles[1]
@@ -46,7 +47,6 @@ class SbisPage(BasePage):
             sizes[img]=(width, height)
         for i in range(len(arr_of_img)-1):
             if sizes[arr_of_img[i]]!=sizes[arr_of_img[i+1]]:
-                print(f"Некорректные {i}/{i+1}")
                 return False
         return True
     def is_region_correct(self):
@@ -81,7 +81,7 @@ class SbisPage(BasePage):
         path_plugin=os.path.dirname(os.path.abspath(__file__))
         path_plugin=path_plugin+'/sbisplugin-setup-web.exe'
         try:
-            assert self.check_file(path_plugin, 20)==True, 'Не скачался за разумное время'
+            assert self.check_file(path_plugin, 30)==True, 'Не скачался за разумное время'
         except:
             return False
         current_size=round(os.path.getsize(path_plugin)/(1024*1024), 2)
@@ -111,5 +111,3 @@ class SbisPage(BasePage):
             time.sleep(1)
             i+=1
         return False
-    def check_url(self):
-        return self.driver.current_url

@@ -45,3 +45,6 @@ class BasePage():
         return WebDriverWait(self.driver, time).until(
             EC.presence_of_all_elements_located(locator)
         )
+    def check_url(self):
+        return self.driver.current_url
+    
