@@ -14,7 +14,7 @@ def test_partners_regions(browser):
     sbis_page=SbisPage(browser, 'https://saby.ru/')
     sbis_page.open()
     sbis_page.go_to_contacts()
-    assert sbis_page.is_region_correct()=='Ярославская обл.'
+    assert sbis_page.is_region_correct('Ярославская обл.')==True, 'Некорректный регион'
     assert sbis_page.is_contacts_present()==True, 'Отсутствуют контакты партнеров'
     sbis_page.go_to_choose_region()
     assert sbis_page.check_region_kamchatka()==True, 'Не поменялся регион на Камчатский край'

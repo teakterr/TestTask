@@ -49,9 +49,14 @@ class SbisPage(BasePage):
             if sizes[arr_of_img[i]]!=sizes[arr_of_img[i+1]]:
                 return False
         return True
-    def is_region_correct(self):
-        current_region=self.element_is_visible(locators.REGION_CHOOSE, locators.TIMEOUT)
-        return current_region.text
+    def is_region_correct(self, text):
+        try:
+            result=self.text_in_element_located(locators.REGION_CHOOSE, text, locators.TIMEOUT)
+        except:
+            return False
+        if result==False:
+            return False
+        return True
     def is_contacts_present(self):
         try:
             self.element_is_visible(locators.CONTACTS_PARTNERS, locators.TIMEOUT)
@@ -99,7 +104,7 @@ class SbisPage(BasePage):
         return True
     def check_region_kamchatka(self):
         try:
-            assert self.is_region_correct()=='Камчатский край'
+            assert self.is_region_correct('Камчатский край')==True
         except:
             return False
         return True
